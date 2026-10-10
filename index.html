@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Визитка</title>
+<style>
+  body {
+    margin: 0;
+    padding: 20px 10px;
+    background: #990000 repeating-linear-gradient(45deg, #990000 0 6px, #8a0000 6px 12px);
+    color: #6b0000;
+    font-family: Verdana, Tahoma, Arial, sans-serif;
+    font-size: 14px;
+  }
+  #page {
+    width: 100%;
+    max-width: 480px;
+    margin: 0 auto;
+    background: #ffe3e0;
+    border: 3px outset #ee4444;
+    padding: 14px 18px;
+  }
+  h1 {
+    margin: 0 0 4px;
+    font-family: "Times New Roman", Times, serif;
+    font-size: 32px;
+    text-align: center;
+    color: #cc0000;
+    text-shadow: 2px 2px 0 #ff8a80;
+  }
+  .role { text-align: center; font-weight: bold; margin: 0 0 10px; }
+  hr { border: 0; border-top: 2px dashed #990000; margin: 12px 0; }
+  p { line-height: 1.5; margin: 8px 0; }
+  h2 { font-size: 16px; color: #990000; margin: 14px 0 6px; }
+  ul { margin: 0; padding-left: 22px; }
+  li { margin: 5px 0; }
+  a { color: #cc0000; }
+  a:visited { color: #800020; }
+  a:hover { color: #ff3300; background: #ffb3a8; }
+
+  /* бегущая строка */
+  .ticker {
+    overflow: hidden;
+    white-space: nowrap;
+    background: #b30000;
+    color: #ffffff;
+    border: 2px inset #aa4444;
+    padding: 3px 0;
+    margin-bottom: 12px;
+    font-weight: bold;
+  }
+  .ticker span {
+    display: inline-block;
+    padding-left: 100%;
+    animation: run 14s linear infinite;
+  }
+  @keyframes run { to { transform: translateX(-100%); } }
+
+  /* мигающее NEW! */
+  .new {
+    color: #fff;
+    background: #ff0000;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 1px 4px;
+    margin-left: 6px;
+    animation: blink 1s steps(1) infinite;
+  }
+  @keyframes blink { 50% { visibility: hidden; } }
+
+  /* счётчик посетителей */
+  .counter { text-align: center; margin: 10px 0; }
+  .counter b {
+    display: inline-block;
+    min-width: 12px;
+    padding: 2px 4px;
+    margin: 0 1px;
+    background: #8b0000;
+    color: #ffe0dc;
+    font-family: "Courier New", monospace;
+    font-size: 18px;
+    border: 1px inset #884444;
+  }
+
+  /* кнопки 88x31 */
+  .buttons { text-align: center; margin-top: 10px; }
+  .btn {
+    display: inline-block;
+    width: 88px; height: 31px;
+    margin: 2px;
+    border: 2px outset #e06060;
+    background: #e8a8a0;
+    font-size: 9px;
+    line-height: 1.15;
+    font-weight: bold;
+    text-align: center;
+    padding-top: 3px;
+    box-sizing: border-box;
+    vertical-align: middle;
+  }
+  .btn.red { background: #cc0000; color: #ffffff; }
+  .btn.crimson { background: #a30000; color: #fff; }
+  .btn.blue { background: #800020; color: #fff; }
+
+  .construction { text-align: center; color: #990000; font-weight: bold; font-size: 12px; }
+  .foot { text-align: center; font-size: 11px; color: #666; }
+
+
+  /* ===== глитч-эффект ===== */
+  h1 { position: relative; }
+  h1::before, h1::after {
+    content: attr(data-text);
+    position: absolute;
+    left: 0; right: 0; top: 0;
+    text-shadow: none;
+    pointer-events: none;
+  }
+  h1::before {
+    color: #ff1a1a;
+    transform: translateX(-3px);
+    animation: glitch-a 2.4s steps(1) infinite;
+  }
+  h1::after {
+    color: #990000;
+    transform: translateX(3px);
+    animation: glitch-b 3.1s steps(1) infinite;
+  }
+  @keyframes glitch-a {
+    0%, 100% { clip-path: inset(0 0 100% 0); }
+    10% { clip-path: inset(10% 0 70% 0); transform: translateX(-5px); }
+    14% { clip-path: inset(60% 0 15% 0); transform: translateX(4px); }
+    18% { clip-path: inset(0 0 100% 0); }
+    60% { clip-path: inset(35% 0 45% 0); transform: translateX(-4px); }
+    64% { clip-path: inset(0 0 100% 0); }
+  }
+  @keyframes glitch-b {
+    0%, 100% { clip-path: inset(0 0 100% 0); }
+    20% { clip-path: inset(70% 0 5% 0); transform: translateX(5px); }
+    24% { clip-path: inset(20% 0 60% 0); transform: translateX(-4px); }
+    28% { clip-path: inset(0 0 100% 0); }
+    75% { clip-path: inset(45% 0 35% 0); transform: translateX(4px); }
+    79% { clip-path: inset(0 0 100% 0); }
+  }
+
+  /* вся страница иногда дёргается */
+  #page { animation: page-glitch 6s steps(1) infinite; }
+  @keyframes page-glitch {
+    0%, 100% { transform: none; filter: none; }
+    41% { transform: translateX(-4px) skewX(2deg); filter: saturate(2) brightness(1.15); }
+    42% { transform: translateX(5px) skewX(-3deg); filter: saturate(1.8) brightness(.8); }
+    43% { transform: translateY(2px); filter: none; }
+    44% { transform: none; }
+    88% { transform: translateX(3px); filter: contrast(1.4); }
+    89% { transform: none; filter: none; }
+  }
+
+  /* строка роли подмигивает */
+  .role { animation: role-flicker 5s steps(1) infinite; }
+  @keyframes role-flicker {
+    0%, 100% { opacity: 1; text-shadow: none; }
+    30% { opacity: .4; text-shadow: 2px 0 #ff1a1a, -2px 0 #990000; }
+    31% { opacity: 1; }
+    70% { text-shadow: -2px 0 #ff1a1a, 2px 0 #990000; }
+    71% { text-shadow: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ticker span { animation: none; padding-left: 0; }
+    .new { animation: none; }
+    #page, .role, h1::before, h1::after { animation: none; }
+    h1::before, h1::after { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div id="page">
+  <div class="ticker"><span id="ticker"></span></div>
+
+  <h1 id="name"></h1>
+  <p class="role" id="role"></p>
+  <hr>
+  <p id="bio"></p>
+  <p>Город: <b id="city"></b></p>
+
+  <h2>9 в 1нт3рнет333 <span class="new">NEW!</span></h2>
+  <ul id="links"></ul>
+
+  <hr>
+  <p class="construction">:: С@йт вЕчн0 в разр@б0тк3333 ::</p>
+
+  <div class="counter">Вы <span id="counter"></span> посетитель</div>
+
+  <div class="buttons">
+    <span class="btn red">Rick Owens<br>навсегда</span>
+    <span class="btn blue">Boris Bidjan<br>Saberi</span>
+    <span class="btn">Carol C.<br>Poell</span>
+    <span class="btn crimson">Yohji<br>Yamamoto</span>
+  </div>
+
+  <hr>
+  <p class="foot" id="year"></p>
+</div>
+
+<script>
+  /* ============ ВАШИ ДАННЫЕ — меняйте только этот блок ============ */
+  const PROFILE = {
+    name: "ч@йникин",
+    role: "крутой типочек Л0л",
+    bio: "Пр1в3тт, тты ж3 зна3шЬ ч3м я заН1маБсс??)0)",
+    city: "С@нкt - п3т3рбYрг",
+    ticker: "*** кр@сн0е - эт0 н3 ц63т, эт0 обр@з жЫзни *** Rick Owens > всё ост@льн0е *** м0д@ н3 дл9 в@с)0) *** д0бавЬ м3н9 в изБр@нн0е)0) ***",
+    visitors: 1337,   // число на счётчике посетителей (его нужно менять вручную)
+
+    // label — текст ссылки, url — адрес. Пустой url — ссылка не показывается.
+    links: [
+      { label: "Telegram",  url: "https://t.me/ваш_ник" },
+      { label: "Instagram", url: "https://instagram.com/ваш_ник" },
+      { label: "VK",        url: "https://vk.com/ваш_ник" },
+      { label: "TikTok",    url: "https://tiktok.com/@ваш_ник" },
+      { label: "GitHub",    url: "https://github.com/ваш_ник" },
+      { label: "Mail",      url: "mailto:you@example.com" }
+    ]
+  };
+  /* =============================================================== */
+
+  document.title = PROFILE.name;
+  const nameEl = document.getElementById("name");
+  nameEl.textContent = PROFILE.name;
+  nameEl.setAttribute("data-text", PROFILE.name);
+  document.getElementById("role").textContent = PROFILE.role;
+  document.getElementById("bio").textContent = PROFILE.bio;
+  document.getElementById("city").textContent = PROFILE.city;
+  document.getElementById("ticker").textContent = PROFILE.ticker;
+  document.getElementById("year").textContent = "© " + new Date().getFullYear() + " " + PROFILE.name;
+
+  const counter = document.getElementById("counter");
+  String(PROFILE.visitors).padStart(6, "0").split("").forEach(d => {
+    const b = document.createElement("b");
+    b.textContent = d;
+    counter.append(b);
+  });
+
+  const list = document.getElementById("links");
+  PROFILE.links.filter(l => l.url && l.url.trim()).forEach(l => {
+    const li = document.createElement("li");
+    const a = document.createElement("a");
+    a.href = l.url;
+    a.textContent = l.label;
+    if (!l.url.startsWith("mailto:")) { a.target = "_blank"; a.rel = "noopener noreferrer"; }
+    li.append(a);
+    list.append(li);
+  });
+</script>
+</body>
+</html>
