@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#dccdb8">
+<title>Визитка</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Marck+Script&family=Playfair+Display:ital,wght@0,400;1,400;1,700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #dccdb8;
+    --ink: #3f271c;
+    --deep: #2b1a12;
+    --caramel: #94704f;
+    --serif: "Playfair Display", Georgia, "Times New Roman", serif;
+    --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+    --hand: "Marck Script", "Segoe Script", "Bradley Hand", cursive;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--serif);
+  }
+  body::after {            /* зерно бумаги */
+    content: "";
+    position: fixed; inset: 0;
+    pointer-events: none;
+    opacity: .6;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .25 0 0 0 0 .15 0 0 0 0 .11 0 0 0 .26 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  body::before {           /* дымка */
+    content: "";
+    position: fixed; inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      radial-gradient(70vmax 50vmax at 15% 5%, rgba(255, 255, 255, .38), transparent 62%),
+      radial-gradient(60vmax 45vmax at 95% 75%, rgba(63, 39, 28, .2), transparent 65%),
+      radial-gradient(40vmax 30vmax at 40% 100%, rgba(255, 255, 255, .2), transparent 70%);
+  }
+
+  .wrap { flex: 1; width: 100%; max-width: 1040px; margin: 0 auto; padding: 22px 22px 56px; }
+
+  /* ---------- шапка ---------- */
+  .mast {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding-bottom: 8px;
+    font-family: var(--mono);
+    font-size: .75rem;
+  }
+  .rule { height: 6px; border-top: 3px double var(--ink); border-bottom: 1px solid var(--ink); }
+
+  /* ---------- название: пишется от руки ---------- */
+  .name-wrap { position: relative; margin: clamp(18px, 4vw, 40px) 0 clamp(26px, 4vw, 46px); }
+  h1 {
+    font-family: var(--hand);
+    font-weight: 400;
+    line-height: 1.15;
+    padding: .05em 0 .14em;
+    text-shadow: 0 0 7px rgba(63, 39, 28, .35);
+    filter: blur(.4px);
+  }
+  h1 #name { display: inline-block; white-space: nowrap; }
+  h1 #name span {
+    display: inline-block;
+    white-space: pre;
+    clip-path: inset(-25% 100% -25% -15%);
+    transform: rotate(var(--r, 0deg)) translateY(var(--y, 0));
+    animation: write .55s cubic-bezier(.4, 0, .6, 1) forwards;
+    animation-delay: calc(.3s + var(--i) * .24s);
+  }
+  .name-line {
+    position: absolute;
+    left: 0; bottom: 0;
+    width: 100%; height: 18px;
+    overflow: visible;
+  }
+  .name-line path {
+    fill: none;
+    stroke: var(--caramel);
+    stroke-width: 4;
+    stroke-linecap: round;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: draw 1s ease-out forwards;
+    animation-delay: var(--line-delay, 2.2s);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    gap: clamp(28px, 6vw, 72px);
+    padding-top: 18px;
+    border-top: 1px solid var(--ink);
+  }
+
+  .deck { font-size: clamp(1.3rem, 3.2vw, 1.7rem); font-style: italic; line-height: 1.25; }
+  .deck, .bio, .links .l, .colophon, .toc-title, .mast { opacity: .9; }
+  .quote {
+    position: relative;
+    margin-top: 26px;
+    padding: 18px 0 0 0;
+    border-top: 1px solid var(--ink);
+    font-size: 1.3rem;
+    line-height: 1.4;
+  }
+  .quote::before {
+    content: "\201C";
+    display: block;
+    height: .55em;
+    font-size: 4.2rem;
+    line-height: .8;
+    color: var(--caramel);
+  }
+  figure { margin-top: 26px; }
+  figure img { display: block; width: 100%; filter: sepia(.55) contrast(1.05); border: 1px solid var(--ink); }
+  figcaption { margin-top: 6px; font-family: var(--mono); font-size: .7rem; }
+  .stamp {
+    display: inline-block;
+    margin-top: 30px;
+    padding: 8px 12px;
+    border: 1.5px solid var(--ink);
+    background: rgba(63, 39, 28, .1);
+    font-family: var(--mono);
+    font-size: .75rem;
+    transform: rotate(-3deg);
+  }
+
+  /* ---------- содержание ---------- */
+  .toc-title {
+    font-family: var(--mono);
+    font-size: .75rem;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--ink);
+  }
+  .links { list-style: none; padding: 0; }
+  .links li { border-bottom: 1px solid rgba(63, 39, 28, .3); animation: fade .6s ease both; animation-delay: calc(1.6s + var(--i) * .07s); }
+  .links a {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    padding: 13px 4px;
+    color: inherit;
+    text-decoration: none;
+    transition: background .2s, color .2s, padding .2s;
+  }
+  .links .l { font-size: clamp(1.4rem, 4vw, 1.9rem); }
+  .links .dots { flex: 1; min-width: 20px; border-bottom: 2px dotted currentColor; opacity: .55; transform: translateY(-.25em); }
+  .links .pg { font-family: var(--mono); font-size: .85rem; }
+  .links a:hover, .links a:focus-visible {
+    background: var(--ink);
+    color: var(--paper);
+    padding-left: 14px;
+    padding-right: 14px;
+    outline: none;
+  }
+
+  .colophon { margin-top: 40px; padding-top: 10px; border-top: 1px solid var(--ink); font-family: var(--mono); font-size: .7rem; line-height: 1.6; }
+
+  .ticker { overflow: hidden; white-space: nowrap; background: var(--deep); color: var(--paper); padding: 11px 0; font-family: var(--mono); font-size: .8rem; }
+  .ticker span { display: inline-block; padding-left: 100%; animation: run 26s linear infinite; }
+
+  @keyframes write  { to { clip-path: inset(-25% -15% -25% -15%); } }
+  @keyframes draw   { to { stroke-dashoffset: 0; } }
+  @keyframes fade   { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  @keyframes run    { to { transform: translateX(-100%); } }
+
+  @media (max-width: 720px) { .grid { grid-template-columns: 1fr; } }
+  @media (prefers-reduced-motion: reduce) {
+    h1 #name span { animation: none; clip-path: none; }
+    .name-line path { animation: none; stroke-dashoffset: 0; }
+    .links li { animation: none; }
+    .ticker span { animation: none; padding-left: 12px; }
+    .links a { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="mast">
+    <span id="top"></span>
+    <span id="issue"></span>
+  </header>
+  <div class="rule"></div>
+
+  <div class="name-wrap">
+    <h1 id="nameBox"><span id="name"></span></h1>
+    <svg class="name-line" viewBox="0 0 400 18" preserveAspectRatio="none" aria-hidden="true">
+      <path id="nameLine" pathLength="1" d="M3 11 C 60 3, 110 16, 180 9 S 290 4, 340 11 S 385 13, 397 6"/>
+    </svg>
+  </div>
+
+  <div class="grid">
+    <div>
+      <p class="deck" id="role"></p>
+      <p class="quote" id="bio"></p>
+      <figure id="photoBox" hidden><img id="photo" alt=""><figcaption id="caption"></figcaption></figure>
+      <span class="stamp" id="note"></span>
+    </div>
+    <div>
+      <p class="toc-title">Содержание</p>
+      <ol class="links" id="links"></ol>
+    </div>
+  </div>
+
+  <p class="colophon" id="foot"></p>
+</div>
+
+<div class="ticker" aria-hidden="true"><span id="ticker"></span></div>
+
+<script>
+  /* ============ ВАШИ ДАННЫЕ — меняйте только этот блок ============ */
+  const PROFILE = {
+    name: "ч@йникин",
+    role: "крутой типочек Л0л",
+    bio: "Пр1в3тт, тты ж3 зна3шЬ ч3м я заН1маБсс??)0)",
+    city: "С@нкt - п3т3рбYрг",
+    issue: "№ 01",
+    ticker: "*** кр@сн0е - эт0 н3 ц63т, эт0 обр@з жЫзни *** Rick Owens > всё ост@льн0е *** м0д@ н3 дл9 в@с)0) *** д0бавЬ м3н9 в изБр@нн0е)0) ***",
+    note: "С@йт вЕчн0 в разр@б0тк3333",
+
+    // Фото необязательно: впишите адрес картинки (например "photo.jpg"), и блок появится.
+    photo: "",
+    caption: "",
+
+    // label — текст в строке, url — адрес. Пустой url — строка не показывается.
+    links: [
+      { label: "Telegram",  url: "https://t.me/ваш_ник" },
+      { label: "Instagram", url: "https://instagram.com/ваш_ник" },
+      { label: "VK",        url: "https://vk.com/ваш_ник" },
+      { label: "TikTok",    url: "https://tiktok.com/@ваш_ник" },
+      { label: "GitHub",    url: "https://github.com/ваш_ник" },
+      { label: "Mail",      url: "mailto:you@example.com" }
+    ]
+  };
+  /* =============================================================== */
+
+  const year = new Date().getFullYear();
+  document.title = PROFILE.name;
+  ["name", "role", "bio", "ticker", "note", "issue"].forEach(id => {
+    document.getElementById(id).textContent = PROFILE[id];
+  });
+  document.getElementById("foot").textContent =
+    "© " + year + " " + PROFILE.name + ". Набрано шрифтами Marck Script, Playfair Display и IBM Plex Mono.";
+
+  if (PROFILE.photo) {
+    document.getElementById("photo").src = PROFILE.photo;
+    document.getElementById("caption").textContent = PROFILE.caption;
+    document.getElementById("photoBox").hidden = false;
+  }
+
+  /* ссылки */
+  const pages = [3, 7, 12, 18, 25, 33, 41, 52];
+  const list = document.getElementById("links");
+  PROFILE.links.filter(l => l.url && l.url.trim()).forEach((l, i) => {
+    const li = document.createElement("li");
+    li.style.setProperty("--i", i);
+    const a = document.createElement("a");
+    a.href = l.url;
+    if (!l.url.startsWith("mailto:")) { a.target = "_blank"; a.rel = "noopener noreferrer"; }
+    const t = document.createElement("span"); t.className = "l";   t.textContent = l.label;
+    const d = document.createElement("span"); d.className = "dots";
+    const p = document.createElement("span"); p.className = "pg";  p.textContent = String(pages[i % pages.length]).padStart(2, "0");
+    a.append(t, d, p);
+    li.append(a);
+    list.append(li);
+  });
+
+  document.getElementById("top").textContent = "(" + PROFILE.city + ") - визитка - " + year;
+
+  /* ---------- имя пишется по линии, как ручкой ---------- */
+  // Штрихи букв нарисованы вручную (по порядку письма). Если в имени есть буква,
+  // которой тут нет, имя выводится рукописным шрифтом.
+  const GLYPHS = {"ч": {"w": 54, "s": ["M 6 50 C 4 74, 14 86, 40 83", "M 40 50 C 40 76, 39 98, 41 108 C 43 114, 49 113, 55 106"]}, "@": {"w": 74, "s": ["M 47 69 C 37 61, 25 70, 26 82 C 27 94, 43 96, 48 85 L 48 90 C 48 101, 63 99, 64 82 C 65 52, 41 43, 25 52 C 8 61, 6 94, 25 105 C 36 111, 52 109, 61 103"]}, "й": {"w": 52, "s": ["M 5 50 C 5 78, 4 100, 6 108 C 8 113, 13 108, 17 100 C 23 88, 31 66, 34 52 C 35 51, 35 53, 35 58 C 35 82, 34 100, 36 108 C 38 114, 46 114, 52 106", "M 9 25 C 13 38, 29 38, 33 25"]}, "и": {"w": 52, "s": ["M 5 50 C 5 78, 4 100, 6 108 C 8 113, 13 108, 17 100 C 23 88, 31 66, 34 52 C 35 51, 35 53, 35 58 C 35 82, 34 100, 36 108 C 38 114, 46 114, 52 106"]}, "н": {"w": 50, "s": ["M 5 50 C 5 76, 4 98, 6 108", "M 6 82 C 15 78, 27 78, 36 82", "M 36 50 C 36 76, 35 98, 37 108 C 39 114, 45 113, 51 106"]}, "к": {"w": 50, "s": ["M 5 50 C 5 76, 4 98, 6 108", "M 35 51 C 27 66, 16 75, 6 81 C 18 85, 31 95, 39 109 C 41 113, 46 112, 50 106"]}};
+
+  const box = document.getElementById("nameBox");
+  const nameEl = document.getElementById("name");
+  const wrapEl = document.querySelector(".name-wrap");
+  const lowerName = PROFILE.name.toLowerCase();
+  const canDraw = [...lowerName].every(c => c === " " || GLYPHS[c]);
+  box.setAttribute("aria-label", PROFILE.name);
+
+  function startPen() {
+    const NS = "http://www.w3.org/2000/svg";
+    const mk = (tag, attrs) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); return e; };
+
+    wrapEl.querySelector(".name-line").style.display = "none";
+    box.textContent = "";
+
+    // раскладка букв
+    const GAP = 6, SLANT = -12;
+    let x = 0;
+    const letters = mk("g", { fill: "none", stroke: "#3f271c", "stroke-width": 6, "stroke-linecap": "round", "stroke-linejoin": "round", transform: "skewX(" + SLANT + ")" });
+    const strokes = [];
+    [...lowerName].forEach(ch => {
+      if (ch === " ") { x += 30; return; }
+      const g = GLYPHS[ch];
+      g.s.forEach((d, k) => {
+        const path = mk("path", { d, transform: "translate(" + x + ",0)" });
+        letters.append(path);
+        strokes.push({ el: path, first: k === 0, speed: 330 });
+      });
+      x += g.w + GAP;
+    });
+    const W = x;
+    const under = mk("path", { d: "M -6 134 C " + (W * .25) + " 124, " + (W * .55) + " 142, " + (W - 40) + " 129", fill: "none", stroke: "#94704f", "stroke-width": 5, "stroke-linecap": "round" });
+    const svg = mk("svg", { viewBox: "-30 12 " + (W + 30) + " 138", role: "img", "aria-hidden": "true" });
+    svg.style.cssText = "display:block;width:100%;max-width:980px;height:auto;overflow:visible;opacity:.88;filter:blur(.5px) drop-shadow(0 0 7px rgba(63,39,28,.35))";
+    const pen = mk("circle", { r: 4.5, fill: "#94704f", opacity: 0 });
+    svg.append(letters, under, pen);
+    box.append(svg);
+    strokes.push({ el: under, first: true, speed: 700, outside: true });
+
+    // расписание: каждый штрих рисуется со скоростью пропорционально длине
+    let t = 0.5;
+    strokes.forEach((st, n) => {
+      st.len = st.el.getTotalLength();
+      st.dur = Math.max(0.16, st.len / st.speed);
+      if (n > 0) t += st.outside ? 0.3 : (st.first ? 0.14 : 0.07);
+      st.start = t;
+      t += st.dur;
+      st.el.style.strokeDasharray = st.len + " " + (st.len + 2);
+      st.el.style.strokeDashoffset = st.len + 1;
+    });
+
+    const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (still) { strokes.forEach(st => st.el.style.strokeDashoffset = 0); return; }
+
+    const ease = p => 0.5 - 0.5 * Math.cos(Math.PI * p);
+    const t0 = performance.now();
+    (function frame() {
+      const now = (performance.now() - t0) / 1000;
+      let active = null;
+      strokes.forEach(st => {
+        const p = Math.min(1, Math.max(0, (now - st.start) / st.dur));
+        const e = ease(p);
+        st.el.style.strokeDashoffset = (st.len + 1) * (1 - e);
+        if (p > 0 && p < 1) active = { st, e };
+      });
+      if (active) {
+        const parent = active.st.outside ? svg : letters;
+        if (pen.parentNode !== parent) parent.append(pen);
+        const pt = active.st.el.getPointAtLength(active.st.len * active.e);
+        // перенос точки с учётом смещения буквы (translate на самом штрихе)
+        const m = active.st.el.getAttribute("transform");
+        const dx = m ? parseFloat(m.match(/translate\(([-\d.]+)/)[1]) : 0;
+        pen.setAttribute("cx", pt.x + dx);
+        pen.setAttribute("cy", pt.y);
+        pen.setAttribute("opacity", 1);
+      } else {
+        pen.setAttribute("opacity", 0);
+      }
+      if (now < t + 0.3) requestAnimationFrame(frame);
+    })();
+  }
+
+  function startFallback() {
+    const letters = [...PROFILE.name];
+    nameEl.textContent = "";
+    letters.forEach((ch, i) => {
+      const sp = document.createElement("span");
+      sp.textContent = ch;
+      sp.style.setProperty("--i", i);
+      sp.style.setProperty("--r", (Math.random() * 4 - 2).toFixed(1) + "deg");
+      sp.style.setProperty("--y", (Math.random() * 6 - 3).toFixed(1) + "px");
+      sp.setAttribute("aria-hidden", "true");
+      nameEl.append(sp);
+    });
+    wrapEl.style.setProperty("--line-delay", (0.3 + letters.length * 0.24 + 0.4).toFixed(2) + "s");
+    function fitName() {
+      box.style.fontSize = "100px";
+      const k = box.clientWidth / nameEl.offsetWidth;
+      box.style.fontSize = Math.min(100 * k, 260) + "px";
+    }
+    fitName();
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitName);
+    addEventListener("resize", fitName);
+  }
+
+  canDraw ? startPen() : startFallback();
+</script>
+</body>
+</html>
